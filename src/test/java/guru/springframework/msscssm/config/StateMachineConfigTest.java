@@ -24,6 +24,4 @@ class StateMachineConfigTest {
     stateMachine.sendEvent(PaymentEvent.AUTHORIZE);
     stateMachine.sendEvent(PaymentEvent.AUTHORIZE_APPROVED);
   }
-
-
 }
