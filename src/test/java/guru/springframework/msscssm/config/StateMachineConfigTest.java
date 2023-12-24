@@ -19,11 +19,10 @@ class StateMachineConfigTest {
   @Test
   void testNewStateMachine() {
     stateMachine.start();
-    logger.info(stateMachine.getState().toString());
     stateMachine.sendEvent(PaymentEvent.PRE_AUTHORIZE);
-    logger.info(stateMachine.getState().toString());
     stateMachine.sendEvent(PaymentEvent.PRE_AUTHORIZE_APPROVED);
-    logger.info(stateMachine.getState().toString());
+    stateMachine.sendEvent(PaymentEvent.AUTHORIZE);
+    stateMachine.sendEvent(PaymentEvent.AUTHORIZE_APPROVED);
   }
 
 
