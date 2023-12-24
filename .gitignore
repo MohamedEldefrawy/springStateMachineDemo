@@ -149,3 +149,5 @@ Desktop.ini
 /target/mssc-ssm-0.0.1-SNAPSHOT.jar.original
 /target/maven-archiver/pom.properties
 /target/surefire-reports/TEST-guru.springframework.msscssm.MsscSsmApplicationTests.xml
+/target/surefire-reports/guru.springframework.msscssm.config.StateMachineConfigTest.txt
+/target/surefire-reports/TEST-guru.springframework.msscssm.config.StateMachineConfigTest.xml
