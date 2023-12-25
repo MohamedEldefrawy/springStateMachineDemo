@@ -25,7 +25,6 @@ public class PaymentStateInterceptor extends StateMachineInterceptorAdapter<Paym
     Optional.ofNullable((Long) message.getHeaders().getOrDefault(PaymentStateMachineUtil.PAYMENT_ID_HEADER, -1L))
         .ifPresent(paymentId -> {
           Payment payment = this.paymentRepository.getOne(paymentId);
-          var x= state.getId();
           payment.setPaymentState(state.getId());
           this.paymentRepository.save(payment);
         });

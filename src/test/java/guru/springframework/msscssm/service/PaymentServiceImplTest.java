@@ -1,10 +1,11 @@
 package guru.springframework.msscssm.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import guru.springframework.msscssm.domain.Payment;
 import guru.springframework.msscssm.domain.PaymentEvent;
 import guru.springframework.msscssm.domain.PaymentState;
 import java.math.BigDecimal;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,21 +19,50 @@ class PaymentServiceImplTest {
   @Autowired
   private StateMachine<PaymentState, PaymentEvent> stateMachine;
 
-  @Test
-  void testPreAuth() {
-    Payment payment = paymentService.newPayment(Payment.builder().amount(new BigDecimal(100)).id(1L).build());
-    paymentService.preAuth(payment.getId());
-    Assertions.assertEquals(paymentService.getPayment(payment.getId()).getPaymentState(), stateMachine.getState().getId());
+
+  private Payment createPayment(BigDecimal amount) {
+    Payment payment = Payment.builder().amount(amount).build();
+    return this.paymentService.newPayment(payment);
   }
 
   @Test
-  void testPreAuthApproved() {
-    Payment payment = paymentService.newPayment(Payment.builder().amount(new BigDecimal(100)).build());
+  void testApprovePreAuth() {
+    Payment payment = createPayment(new BigDecimal(100));
     paymentService.preAuth(payment.getId());
     paymentService.approvePreAuth(payment.getId());
     payment = paymentService.getPayment(payment.getId());
-    var id = payment.getPaymentState();
-    Assertions.assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
+    assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
+  }
+
+  @Test
+  void testDeclinePreAuth() {
+    Payment payment = createPayment(new BigDecimal(100));
+    paymentService.preAuth(payment.getId());
+    paymentService.declinePreAuth(payment.getId());
+    payment = paymentService.getPayment(payment.getId());
+    assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
+  }
+
+  @Test
+  void testApproveAuth() {
+    Payment payment = createPayment(new BigDecimal(200));
+    paymentService.preAuth(payment.getId());
+    paymentService.approvePreAuth(payment.getId());
+    paymentService.auth(payment.getId());
+    paymentService.approveAuth(payment.getId());
+    payment = paymentService.getPayment(payment.getId());
+    assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
+  }
+
+  @Test
+  void testDeclineAuth() {
+    Payment payment = createPayment(new BigDecimal(200));
+    paymentService.preAuth(payment.getId());
+    paymentService.approvePreAuth(payment.getId());
+    paymentService.auth(payment.getId());
+    paymentService.declineAuth(payment.getId());
+    payment = paymentService.getPayment(payment.getId());
+    assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
   }
 
 }

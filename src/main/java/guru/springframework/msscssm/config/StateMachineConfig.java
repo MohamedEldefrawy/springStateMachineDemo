@@ -32,9 +32,10 @@ public class StateMachineConfig {
     builder.configureTransitions()
         .withExternal().source(PaymentState.NEW).target(PaymentState.NEW).event(PaymentEvent.PRE_AUTHORIZE)
         .and().withExternal().source(PaymentState.NEW).target(PaymentState.PRE_AUTHORIZE).event(PaymentEvent.PRE_AUTHORIZE_APPROVED)
-        .and().withExternal().source(PaymentState.PRE_AUTHORIZE).target(PaymentState.AUTHORIZE).event(PaymentEvent.AUTHORIZE_APPROVED)
+        .and().withExternal().source(PaymentState.NEW).target(PaymentState.PRE_AUTHORIZE_ERROR).event(PaymentEvent.PRE_AUTHORIZE_DECLINED)
         .and().withExternal().source(PaymentState.PRE_AUTHORIZE).target(PaymentState.PRE_AUTHORIZE).event(PaymentEvent.AUTHORIZE)
-        .and().withExternal().source(PaymentState.NEW).target(PaymentState.PRE_AUTHORIZE_ERROR).event(PaymentEvent.PRE_AUTHORIZE_DECLINED);
+        .and().withExternal().source(PaymentState.PRE_AUTHORIZE).target(PaymentState.AUTHORIZE).event(PaymentEvent.AUTHORIZE_APPROVED)
+        .and().withExternal().source(PaymentState.PRE_AUTHORIZE).target(PaymentState.AUTHORIZE_ERROR).event(PaymentEvent.AUTHORIZE_DECLINED);
     StateMachine<PaymentState, PaymentEvent> stateMachine = builder.build();
     stateMachine.addStateListener(listener);
     return stateMachine;
