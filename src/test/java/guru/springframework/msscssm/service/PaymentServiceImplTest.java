@@ -30,7 +30,9 @@ class PaymentServiceImplTest {
     Payment payment = paymentService.newPayment(Payment.builder().amount(new BigDecimal(100)).build());
     paymentService.preAuth(payment.getId());
     paymentService.approvePreAuth(payment.getId());
-    Assertions.assertEquals(paymentService.getPayment(payment.getId()).getPaymentState(), stateMachine.getState().getId());
+    payment = paymentService.getPayment(payment.getId());
+    var id = payment.getPaymentState();
+    Assertions.assertEquals(payment.getPaymentState(), stateMachine.getState().getId());
   }
 
 }
